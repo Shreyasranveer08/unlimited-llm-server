@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  llm:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    environment:
+      - MODEL_PATH=/app/models/your-model.gguf
+    restart: unless-stopped
+  ui:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./ui:/app
+    command: ["npm", "run", "dev"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - llm
